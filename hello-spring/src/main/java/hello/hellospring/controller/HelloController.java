@@ -4,6 +4,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @Controller
 public class HelloController {
@@ -18,5 +20,33 @@ public class HelloController {
     public String helloMvc(@RequestParam("name")String name, Model model){
         model.addAttribute("name",name);
         return "hello-template";
+    }
+
+    @GetMapping("hello-string")
+    @ResponseBody // http protocol에서 body부분에 직접 내가 넣겠다.
+    public String helloString(@RequestParam("name") String name){
+        return "hello "+name;
+    }
+
+    @GetMapping("hello-api")
+    @ResponseBody // 객체를 반환할 때 json으로 리턴하는게 default
+    public Hello helloApi(@RequestParam("name")String name){
+        Hello hello=new Hello();
+        hello.setName(name);
+        return hello; // 객체를 JSONObject형식으로 리턴함.
+    }
+
+    static class Hello{
+        private String name;
+
+        //getter
+        public String getName() {
+            return name;
+        }
+
+        //setter
+        public void setName(String name) {
+            this.name = name;
+        }
     }
 }
